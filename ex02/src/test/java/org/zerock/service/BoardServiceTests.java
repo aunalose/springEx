@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -29,16 +30,17 @@ public class BoardServiceTests {
 	@Test
 	public void testRegister() {
 		BoardVO board = new BoardVO();
-		board.setTitle("새로 작성하는 글");
-		board.setContent("새로 작성하는 내용");
+		board.setTitle("�깉濡� �옉�꽦�븯�뒗 湲�");
+		board.setContent("�깉濡� �옉�꽦�븯�뒗 �궡�슜");
 		board.setWriter("newbie");
 		
 		service.register(board);
-		log.info("생성된 게시물의 번호: " + board.getBno());
+		log.info("�깮�꽦�맂 寃뚯떆臾쇱쓽 踰덊샇: " + board.getBno());
 	}
 	@Test
 	public void testGetList() {
-		service.getList().forEach(board -> log.info(board));
+		//service.getList().forEach(board -> log.info(board));
+		service.getList(new Criteria(2,10)).forEach(board ->log.info(board));
 	}
 	@Test
 	public void testGet() {
@@ -56,7 +58,7 @@ public class BoardServiceTests {
 			return;
 			
 		}
-		board.setTitle("제목 수정합니다.");
+		board.setTitle("�젣紐� �닔�젙�빀�땲�떎.");
 		log.info("MODIFY RESULT: " +service.modify(board));
 		}
 	}

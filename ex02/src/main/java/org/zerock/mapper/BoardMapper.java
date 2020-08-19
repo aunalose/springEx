@@ -4,24 +4,27 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Select;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 public interface BoardMapper {
 
 	//@Select("select* from tbl_board where bno>0 ")
 	public List<BoardVO> getList();
 	
-	//insert만 처리되고 생성된 PK 값을 알 필요가 없는 경우
+	public List<BoardVO> getListWithPaging(Criteria cri);
+	
+	//insert留� 泥섎━�릺怨� �깮�꽦�맂 PK 媛믪쓣 �븣 �븘�슂媛� �뾾�뒗 寃쎌슦
 	public void insert(BoardVO board);
 	
-	//insert문이 실행되고 생성된 PK 값을 알아야 하는 경우
+	//insert臾몄씠 �떎�뻾�릺怨� �깮�꽦�맂 PK 媛믪쓣 �븣�븘�빞 �븯�뒗 寃쎌슦
 	public void insertSelectKey(BoardVO board);
 	
-	//read 처리
+	//read 泥섎━
 	public BoardVO read(Long bno);
 	
-	//delete 처리
+	//delete 泥섎━
 	public int delete(Long bno);
 	
-	//update 처리
+	//update 泥섎━
 	public int update(BoardVO board);
 }

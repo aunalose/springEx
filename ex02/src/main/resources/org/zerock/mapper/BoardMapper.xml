@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.mapper.BoardMapper">
+
+	<select id="getList" resultType="org.zerock.domain.BoardVO">
+	<!--[CDATA[]]: <,>(부등호) 때문에 XML이 해석하지말고 쿼리 그냥 넘기란 말임. 흡사 XML의 주석처리같은 느낌   -->
+	<![CDATA[
+		select* from tbl_board where bno > 0
+	]]>
+	</select>	
+	
+	<insert id="insert">
+		insert into tbl_board(bno, title, content, writer)
+		values (seq_board.nextval, #{title}, #{content}, #{writer})
+	</insert>
+	
+	<insert id="insertSelectKey">
+	<!-- selectKey: DB에 명령을 한번만 보내며, 우선 입력한 값의 결과값을 다음 쿼리로 바로 return. 
+							주로 PK 값을 미리(before) SQL을 통해서 처리해 두고 특정한 이름으로 결과를 보관하는 방식. bno sequence로 미리 생성하고 값 insert함. -->
+		<selectKey keyProperty="bno" order="BEFORE" resultType="long">
+			select seq_board.nextval from dual
+		</selectKey>
+			insert into tbl_board (bno, title, content, writer)
+			values (#{bno}, #{title}, #{content}, #{writer})
+	</insert>
+	
+	<!--Mybatis는 Mapper 인터페이스의 리턴 타입에 맞게 select의 결과를 처리하기 때문에 
+		tbl_board의 모든 칼럼은 BoardVO의 bno,title,content,writer,regdate,updateDate 속성값으로 처리됨  -->
+	<select id="read" resultType="org.zerock.domain.BoardVO">
+		select* from tbl_board where bno=#{bno}
+	</select>
+	
+	<delete id="delete" >
+		delete from tbl_board where bno=#{bno}
+	</delete>
+	
+	<update id="update">
+		update tbl_board
+		set title=#{title},
+		content=#{content},
+		writer=#{writer},
+		updateDate= sysdate
+		where bno=#{bno}
+	</update>
+	
+</mapper>

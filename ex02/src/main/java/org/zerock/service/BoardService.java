@@ -3,21 +3,26 @@ package org.zerock.service;
 import java.util.List;
 
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 public interface BoardService {
 
-	//글 쓰기
+	//湲� �벐湲�
 	public void register(BoardVO board);
 	
-	//특정한 게시물을 가져오는 메서드
+	//�듅�젙�븳 寃뚯떆臾쇱쓣 媛��졇�삤�뒗 硫붿꽌�뱶
 	public BoardVO get(Long bno);
 	
-	//글 수정하기
+	//湲� �닔�젙�븯湲�
 	public boolean modify(BoardVO board);
 	
-	//글 삭제하기
+	//湲� �궘�젣�븯湲�
 	public boolean remove(Long bno);
 	
-	//전체 리스트 가져오는 메서드
-	public List<BoardVO> getList();
+	//�쟾泥� 由ъ뒪�듃 媛��졇�삤�뒗 硫붿꽌�뱶
+	//public List<BoardVO> getList();
+	
+	public List<BoardVO> getList(Criteria cri);
+	
+	public int getTotal(Criteria cri);
 }

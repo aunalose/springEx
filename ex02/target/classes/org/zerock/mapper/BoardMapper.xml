@@ -10,6 +10,21 @@
 		select* from tbl_board where bno > 0
 	]]>
 	</select>	
+<!-- 
+	<select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
+	<![CDATA[
+	select
+		bno, title, content, writer, regdate, updatedate
+	from
+		(
+		select /*+INDEX_DESC(tbl_board pk_board)*/ rownum rn, bno, title, content, writer, regdate, updatedate
+		from tbl_board
+		where rownum<=#{pageNum} * #{amount}
+		)
+	where rn>(#{pageNum}-1)*#{amount}
+	]]>
+	</select> -->
+	
 	
 	<insert id="insert">
 		insert into tbl_board(bno, title, content, writer)
@@ -44,5 +59,57 @@
 		updateDate= sysdate
 		where bno=#{bno}
 	</update>
+	<sql id="criteria">
+    <trim prefix="(" suffix=") AND " prefixOverrides="OR">
+        <foreach item="type" collection="typeArr">
+          <trim prefix="OR">
+            <choose>
+              <when test="type =='T'.toString()">
+                title like '%' || #{ keyword} || '%'
+              </when>
+              <when test="type =='C'.toString()">
+                content like '%'  || #{ keyword} ||  '%'
+              </when>
+              <when test="type =='W'.toString()">
+                 writer like '%'  || #{ keyword} ||  '%'
+              </when>
+            </choose>
+          </trim>
+        </foreach>   
+        </trim>
+    </sql>
+
+    <!-- p 297 -->
+    <!-- p 355 -->
+	<select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
+    <![CDATA[
+      select bno, title, content, writer, regdate, updateDate 
+      from 
+      (
+        select /*+INDEX_DESC(tbl_board pk_board) */
+           rownum rn, bno, title, content, writer, regdate, updateDate
+        from tbl_board
+        where   
+      ]]>       
+     <include refid="criteria"></include>
+    <![CDATA[
+         rownum <= #{pageNum} * #{ amount}
+       )
+       where rn > (#{pageNum}-1) * #{ amount}
+    ]]>
+	</select>
 	
+	<!-- p 339 -->
+	<select id="getTotalCount" resultType="int">
+	  select count(*) 
+	  from tbl_board
+	  where 
+	  <include refid="criteria"></include>
+	  bno > 0
+	</select>
+	
+	<!--  p.323 
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_board where bno>0
+	</select> -->
 </mapper>

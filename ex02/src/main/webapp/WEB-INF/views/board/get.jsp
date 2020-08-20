@@ -20,7 +20,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Board Register</div>
 			<div class="panel-body">
-		<form action="/board/register" method="post" id="operForm">
+		
 			<div class="form-group">
 				<label>Bno</label> <input class="form-control" name='bno' value='<c:out value="${board.bno }"/>' readonly="readonly">
 			</div>
@@ -38,9 +38,13 @@
 			<!-- <button type="button"  data-oper='list' class="btn btn-info" onclick="location.href='/board/list' ">List</button> -->
 			<button type="button" class="btn btn-default" data-oper='modify'>Modify</button>
 			<button type="button" class="btn btn-info" data-oper='list'>List</button>		
-		</form>
+		
 		<form action="/board/modify" method="get" id='operForm'>
 			<input type='hidden' id='bno' name='bno' value='<c:out value="${board.bno }" />'>
+			<input type='hidden' name='pageNum' value='<c:out value="${cri.pageNum }" />'>
+			<input type='hidden' name='amount' value='<c:out value="${cri.amount }" />'>
+			<input type='hidden' name='keyword' value='<c:out value="${cri.keyword }" />'>
+			<input type='hidden' name='type' value='<c:out value="${cri.type }" />'>
 		</form>
 			</div>
 		</div>

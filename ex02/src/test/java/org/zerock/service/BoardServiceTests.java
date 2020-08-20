@@ -1,6 +1,6 @@
 package org.zerock.service;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,30 +18,34 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class BoardServiceTests {
 
-	@Setter(onMethod_ = {@Autowired})
+	@Setter(onMethod_ = @Autowired)
 	private BoardService service;
 	
 	@Test
-	public void testExists(){
-		log.info(service);
+	public void testExist() {
+		log.info("> " + service);
 		assertNotNull(service);
 	}
 	
 	@Test
 	public void testRegister() {
 		BoardVO board = new BoardVO();
-		board.setTitle("�깉濡� �옉�꽦�븯�뒗 湲�");
-		board.setContent("�깉濡� �옉�꽦�븯�뒗 �궡�슜");
+		board.setTitle("새로 작성하는 글");
+		board.setContent("새로 작성하는 내용");
 		board.setWriter("newbie");
 		
 		service.register(board);
-		log.info("�깮�꽦�맂 寃뚯떆臾쇱쓽 踰덊샇: " + board.getBno());
+		
+		log.info("생성된 게시물의 번호: " + board.getBno());
 	}
+	
 	@Test
 	public void testGetList() {
 		//service.getList().forEach(board -> log.info(board));
-		service.getList(new Criteria(2,10)).forEach(board ->log.info(board));
+		// p 300 pageNum과 amount 처리하기 위해 수정
+		service.getList(new Criteria(2, 10)).forEach(board -> log.info(board));
 	}
+	
 	@Test
 	public void testGet() {
 		log.info(service.get(1L));
@@ -49,17 +53,19 @@ public class BoardServiceTests {
 	
 	@Test
 	public void testDelete() {
-		log.info("REMOVE RESULT: " +service.remove(2L));
+		log.info("REMOVE RESULT: " + service.remove(2L));
 	}
+	
 	@Test
 	public void testUpdate() {
 		BoardVO board = service.get(1L);
-		if (board==null) {
+		
+		if(board == null) {
 			return;
-			
 		}
-		board.setTitle("�젣紐� �닔�젙�빀�땲�떎.");
-		log.info("MODIFY RESULT: " +service.modify(board));
-		}
+		
+		board.setTitle("제목 수정합니다.");
+		log.info("MODIFY RESULT: " + service.modify(board));
 	}
 
+}

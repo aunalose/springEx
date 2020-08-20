@@ -1,6 +1,6 @@
 package org.zerock.persistence;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,18 +14,19 @@ public class JDBCTests {
 
 	static {
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");	
+			Class.forName("oracle.jdbc.driver.OracleDriver");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
 	@Test
-	public void testconnection() {
-		try(Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
-				"scott", "tiger"	)) {
-			log.info(con);	//INFO : org.zerock.persistence.JDBCTests - oracle.jdbc.driver.T4CConnection@1134affc
+	public void testConnection() {
+		try (Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "scott", "tiger")) {
+			log.info(con);
 		} catch (Exception e) {
-		fail(e.getMessage());
+			fail(e.getMessage());
 		}
 	}
+
 }

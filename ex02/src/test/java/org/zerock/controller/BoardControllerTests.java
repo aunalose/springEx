@@ -1,5 +1,6 @@
 package org.zerock.controller;
 
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +8,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -15,12 +18,16 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+// Test for Controller. ServletContext 이용하기 위해서
+@WebAppConfiguration
+@ContextConfiguration({
+	"file:src/main/webapp/WEB-INF/spring/root-context.xml"
+	, "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"
+})
 @Log4j
-@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml",
-		 "file:src/man/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
 public class BoardControllerTests {
 
-	@Setter(onMethod_ ={@Autowired} )
+	@Setter(onMethod_ = @Autowired)
 	private WebApplicationContext ctx;
 	private MockMvc mockMvc;
 	
@@ -29,19 +36,69 @@ public class BoardControllerTests {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 	}
 	
+	// p 214 글목록 테스트
 	@Test
-	public void testList() throws Exception{
-	
+	public void testList() throws Exception {
+		log.info(
+				mockMvc.perform(MockMvcRequestBuilders.get("/board/list"))
+				.andReturn()
+				.getModelAndView()
+				.getModelMap()
+				);
 	}
 	
-	/*
+	// p 301 pageNum과 amount를 파라미터로 테스트
 	@Test
-	public void testListPaging() throws Exception{
+	public void testListPaging() throws Exception {
 		log.info(mockMvc.perform(
-				MockMvcBuilders.get("/board/list")
-				.param("pageNum","2")
-				.param("amount","50"))
+				MockMvcRequestBuilders.get("/board/list")
+				.param("pageNum", "2")
+				.param("amount", "50"))
 				.andReturn().getModelAndView().getModelMap());
 	}
-	*/
+	
+	// p 216 글쓰기 완료 테스트
+	@Test
+	public void testRegister() throws Exception {
+		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/register")
+				.param("title", "테스트 새 글 제목")
+				.param("content", "테스트 새 글 내용")
+				.param("writer", "user00")
+				).andReturn().getModelAndView().getViewName();
+		
+		log.info(resultPage);
+	}
+
+	
+	// p 218 글 조회 테스트
+	@Test
+	public void testGet() throws Exception {
+		log.info(mockMvc.perform(MockMvcRequestBuilders
+				.get("/board/get")
+				.param("bno", "1"))
+				.andReturn().getModelAndView().getModelMap());
+	}
+	
+	// p 220 글 수정 테스트
+	@Test
+	public void testModify() throws Exception {
+		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/modify")
+				.param("bno", "27")
+				.param("title", "수정된 새 글 제목 수정")
+				.param("content", "수정된 새 글 내용 수정")
+				.param("writer", "user00")
+				).andReturn().getModelAndView().getViewName();
+
+		log.info(resultPage);
+	}
+	
+	// p 221 글 삭제 테스트
+	@Test
+	public void testRemove() throws Exception {
+		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/board/remove")
+				.param("bno", "25")
+				).andReturn().getModelAndView().getViewName();
+		
+		log.info(resultPage);
+	}
 }
